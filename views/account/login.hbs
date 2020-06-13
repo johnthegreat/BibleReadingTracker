@@ -1,0 +1,28 @@
+<form method="post">
+	<h1>Login</h1>
+
+	<input type="hidden" name="_csrf" value="{{_csrf}}">
+
+	<a href="/account/register">Don't have an account? Register.</a>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-lg-12">
+			<div class="form-group">
+				<label class="control-label" for="username">Username</label>
+				<input class="form-control" type="text" name="username" id="username" placeholder="Username" autofocus="autofocus" required="required">
+			</div>
+		</div>
+
+		<div class="col-xs-12 col-sm-12 col-lg-12">
+			<div class="form-group">
+				<label class="col-form-label font-weight-bold text-right" for="password">Password</label>
+				<input class="form-control" type="password" name="password" id="password" placeholder="Password" autocomplete="current-password" required="required">
+			</div>
+			<!--<a class="" href="/account/forgot">Forgot?</a>-->
+		</div>
+	</div>
+
+	<div class="pull-right">
+		<button type="submit" class="btn btn-primary">Login</button>
+	</div>
+</form>

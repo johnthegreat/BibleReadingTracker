@@ -1,0 +1,58 @@
+<style>
+	label {
+		user-select: none;
+		font-size: 18px;
+	}
+
+	.book-name {
+		font-size: 24px;
+	}
+</style>
+
+<script src="/js/index.js"></script>
+<script src="/js/BookComponentPanel.js"></script>
+<script>
+	$(function() {
+		let $booksContainer = $('#booksContainer');
+		getBooks().then(function(books) {
+			getChaptersRead().then(function(myChaptersRead) {
+				_.each(books,function(book) {
+					let bookPanel = new BookComponentPanel({book: book.book, chapters: book.chapters, myChaptersRead: myChaptersRead });
+					$booksContainer.append(bookPanel.element);
+				});
+			});
+		});
+	});
+</script>
+
+<div id="booksContainer"></div>
+
+<div id="bookComponentChapterTemplate" class="hide">
+	<div class="list-group-item">
+		<div class="checkbox">
+			<label>
+				\{{#if checked}}<input type="checkbox" checked="checked">\{{/if}} \{{#unless checked}}<input type="checkbox">\{{/unless}} \{{chapterName}}
+			</label>
+
+			<div class="pull-right">
+				<div class="last-read">\{{lastRead}}</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="bookComponentTemplate" class="hide">
+	<div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="heading\{{uniq}}">
+			<h4 class="panel-title">
+				<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse\{{uniq}}" aria-expanded="false" aria-controls="collapse\{{uniq}}">
+					<div class="book-name">\{{book}}</div>
+				</a>
+			</h4>
+		</div>
+		<div id="collapse\{{uniq}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading\{{uniq}}">
+			<div class="list-group"></div>
+		</div>
+	</div>
+</div>
+

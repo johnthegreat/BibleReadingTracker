@@ -1,0 +1,70 @@
+<form method="post" action="/account/profile">
+	<h1>Profile</h1>
+
+	<div class="panel panel-default">
+		<div class="panel-heading"><i class="fas fa-user-circle"></i> Basic Information</div>
+		<div class="panel-body">
+			<form action="/account/profile" method="post">
+				<input type="hidden" name="_csrf" value="{{_csrf}}">
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label" for="name">Name</label>
+							<input class="form-control" type="text" name="name" id="name" autocomplete="name" value="{{user.name}}" placeholder="Name">
+						</div>
+					</div>
+
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label" for="username">Username</label>
+							<input class="form-control" type="text" name="username" id="username" value="{{user.username}}">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="pull-right">
+						<button class="btn btn btn-primary" type="submit">
+							<i class="fas fa-pencil-alt fa-sm"></i> Update
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<i class="fas fa-lock"></i> Change Password
+		</div>
+		<div class="panel-body">
+			<form action="/account/password" method="post">
+				<input type="hidden" name="_csrf" value="{{ _csrf }}">
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label" for="password">New Password</label>
+							<input class="form-control" type="password" name="password" id="password" autocomplete="new-password" required>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label" for="confirmPassword">Confirm Password</label>
+							<input class="form-control" type="password" name="confirmPassword" id="confirmPassword" autocomplete="new-password" required>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="pull-right">
+						<button class="btn btn-primary" type="submit">
+							<i class="fas fa-lock fa-sm"></i> Change Password
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</form>
