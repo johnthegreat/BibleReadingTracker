@@ -40,10 +40,10 @@ passport.deserializeUser(function(id, done) {
 });
 
 /**
- * Sign in using Email and Password.
+ * Sign in using Username and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
-	userProvider.getUserByUsername(username.toLowerCase()).then(function(user) {
+	userProvider.getUserByUsername(username).then(function(user) {
 		if (!user) {
 			return done(null, false, { msg: `Username ${username} not found.` });
 		}
