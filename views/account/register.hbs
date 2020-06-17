@@ -1,13 +1,22 @@
+<script>
+	$(function() {
+		'use strict';
+		$("#name").get(0).focus();
+	});
+</script>
+
 <form method="post" action="/account/register">
 	<input type="hidden" name="_csrf" value="{{_csrf}}">
 
 	<h1>Register</h1>
 
+	<a href="/account/login">Already have an account? Login.</a>
+
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="form-group">
 				<label class="control-label" for="name">Name</label>
-				<input type="text" id="name" name="name" class="form-control" name="name" placeholder="Name" maxlength="32" required>
+				<input type="text" id="name" name="name" class="form-control" placeholder="Name" maxlength="32" required>
 			</div>
 		</div>
 		<div class="col-xs-12">
@@ -20,7 +29,7 @@
 		<div class="col-xs-12">
 			<div class="form-group">
 				<label class="control-label" for="password">Password</label>
-				<input type="password" id="password" name="password" class="form-control" placeholder="Password" maxlength="32" required>
+				<input type="password" id="password" name="password" class="form-control" placeholder="Password" autocomplete="new-password" maxlength="70" required>
 			</div>
 		</div>
 	</div>

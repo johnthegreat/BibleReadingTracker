@@ -142,4 +142,15 @@ UserProvider.prototype.updateUser = function(user) {
 	});
 };
 
+UserProvider.prototype.deleteUser = function(userId) {
+	return new Promise(function(resolve, reject) {
+		db.run("DELETE FROM `users` WHERE `id` = ?",[userId],function(err) {
+			if (err) {
+				return reject(err);
+			}
+			resolve();
+		});
+	});
+};
+
 module.exports = UserProvider;

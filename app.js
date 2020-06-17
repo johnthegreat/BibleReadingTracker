@@ -163,6 +163,9 @@ app.get('/account/logout',passportConfig.isAuthenticated,accountController.logou
 	app.get('/api/chapter_read',passportConfig.isAuthenticated,userChapterReadApiController.getUserChaptersRead);
 	app.put('/api/chapter_read',passportConfig.isAuthenticated,userChapterReadApiController.markAsRead);
 	app.delete('/api/chapter_read',passportConfig.isAuthenticated,userChapterReadApiController.markAsUnread);
+
+	const accountApiController = require('./controllers/api/account');
+	app.delete('/api/account',passportConfig.isAuthenticated,accountApiController.deleteAccount);
 })();
 
 // catch 404 and forward to error handler

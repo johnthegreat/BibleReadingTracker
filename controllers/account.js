@@ -30,6 +30,8 @@ const UserProvider = require('./lib/UserProvider');
  */
 const userProvider = new UserProvider();
 
+const MAX_PASSWORD_LENGTH = 70;
+
 /**
  *
  * @param {Request} req
@@ -53,6 +55,25 @@ exports.postRegister = function(req,res,next) {
 	 * @type {User}
 	 */
 	const user = User.prototype.create(_.pick(req.body,['name','username','password']));
+	if (!_.isString(user.name) || !_.isString(user.username) || !_.isString(user.password)) {
+		req.flash('errors',{msg: 'Incorrect parameters.'});
+		return res.redirect('/account/register');
+	}
+
+	if (user.name.trim().length === 0) {
+		req.flash('errors',{msg: 'Name is required.' });
+		return res.redirect('/account/register');
+	} else if (user.username.trim().length === 0) {
+		req.flash('errors',{msg: 'Username is required.' });
+		return res.redirect('/account/register');
+	} if (user.password.trim().length === 0) {
+		req.flash('errors',{msg: 'Password is required.' });
+		return res.redirect('/account/register');
+	} else if (user.password.trim().length > MAX_PASSWORD_LENGTH) {
+		req.flash('errors',{msg: 'Password must not exceed 70 characters.' });
+		return res.redirect('/account/register');
+	}
+
 	userProvider.getUserByUsername(user.username).then(function (existingUser) {
 		if (existingUser) {
 			req.flash('errors', {msg: 'Account with that username already exists.'});
@@ -99,6 +120,20 @@ exports.getLogin = function(req,res) {
  * @param {Function} next
  */
 exports.postLogin = function(req,res,next) {
+	if (_.isEmpty(req.body.username)) {
+		req.flash('errors',{msg: 'Username must not be empty.'});
+		return res.redirect('/account/login');
+	} else if (_.isEmpty(req.body.password)) {
+		req.flash('errors',{msg: 'Password must not be empty.' });
+		return res.redirect('/account/login');
+	} else if (!_.isString(req.body.password)) {
+		req.flash('errors',{msg: 'Password must be a string.' });
+		return res.redirect('/account/login');
+	} else if (req.body.password.length > MAX_PASSWORD_LENGTH) {
+		req.flash('errors',{msg: 'Password must not exceed 70 characters.' });
+		return res.redirect('/account/login');
+	}
+
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
 			return next(err);

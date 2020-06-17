@@ -91,4 +91,15 @@ UserChapterReadProvider.prototype.deleteUserChapterRead = function(userChapterRe
 	});
 };
 
+UserChapterReadProvider.prototype.deleteUserChaptersReadByUserId = function(userId) {
+	return new Promise(function(resolve, reject) {
+		db.run('DELETE FROM `user_chapter_read` WHERE `userId` = ?',[userId],function(err) {
+			if (err) {
+				return reject(err);
+			}
+			resolve();
+		});
+	});
+};
+
 module.exports = userChapterReadProvider;
