@@ -24,12 +24,13 @@ const User = function() {
 	this.lastLoginDt = null;
 	this.passwordResetToken = null;
 	this.passwordResetExpires = null;
+	this.theme = null;
 };
 User.prototype.create = function(obj) {
 	if (!obj) {
 		return null;
 	}
-	
+
 	let user = new User();
 	user.id = obj['id'] ? obj['id'] : null;
 	user.name = obj['name'] ? obj['name'] : null;
@@ -38,6 +39,7 @@ User.prototype.create = function(obj) {
 	user.lastLoginDt = obj['lastLoginDt'] ? obj['lastLoginDt'] : null;
 	user.passwordResetToken = obj['passwordResetToken'] ? obj['passwordResetToken'] : null;
 	user.passwordResetExpires = obj['passwordResetExpires'] ? obj['passwordResetExpires'] : null;
+	user.theme = obj['theme'] ? obj['theme'] : null;
 	return user;
 };
 module.exports = User;

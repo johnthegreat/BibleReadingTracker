@@ -38,6 +38,8 @@ const SqliteStore = new sqliteStoreFactory(session);
  */
 dotenv.config({ path: '.env' });
 
+// Helpers
+const getThemeUrl = require('./utils/getThemeUrl');
 const hbs = require('hbs');
 hbs.registerPartials(__dirname + '/views/partials');
 // https://github.com/pillarjs/hbs
@@ -126,6 +128,27 @@ const cacheControlMiddleware = function (req, res, next) {
 app.get('/js/*', cacheControlMiddleware);
 app.get('/css/*', cacheControlMiddleware);
 app.get('/api/books',cacheControlMiddleware);
+
+app.use(function setThemeUrl(req,res,next) {
+	// Themes only applies to views
+	if (req.path.startsWith('/api')) {
+		next();
+		return;
+	}
+
+	// If we wanted to set a default theme, this would be the place to do it.
+	// ...
+
+	// Check if this user has a theme preference.
+	if (req.user && req.user.theme) {
+		const themeUrl = getThemeUrl(req.user.theme);
+		if (themeUrl !== null) {
+			// The user has chosen a custom theme, use it instead.
+			res.locals.themeUrl = themeUrl;
+		}
+	}
+	next();
+});
 
 const homeController = require('./controllers/home');
 app.get('/',homeController.getHome);

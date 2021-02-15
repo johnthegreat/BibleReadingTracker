@@ -21,6 +21,7 @@ const moment = require('moment');
 const _ = require('lodash');
 
 const hashPassword = require('../utils/hashPassword');
+const isValidTheme = require('../utils/isValidTheme');
 
 const User = require('../models/User');
 const UserProvider = require('./lib/UserProvider');
@@ -191,19 +192,44 @@ exports.getProfile = function(req,res) {
  * @param {Response} res
  */
 exports.postProfile = function(req,res) {
-	if (!_.isString(req.body['name']) && req.body['name'].trim() > 255) {
-		return req.flash('errors',{msg: 'Please enter a valid name.' });
-	} else if (!_.isString(req.body['username']) || req.body['username'].trim().length > 255) {
-		return req.flash('errors',{msg: 'Please enter a valid username.' });
+	let changed = false;
+	if (_.has(req.body,'name') && _.has(req.body,'username' )) {
+		if (!_.isString(req.body['name']) || req.body['name'].trim() > 255) {
+			req.flash('errors', {msg: 'Please enter a valid name.'});
+			res.redirect('/account/profile');
+			return;
+		} else if (!_.isString(req.body['username']) || req.body['username'].trim().length > 255) {
+			req.flash('errors', {msg: 'Please enter a valid username.'});
+			res.redirect('/account/profile');
+			return;
+		}
+
+		req.user.name = req.body['name'].trim();
+		req.user.username = req.body['username'].trim();
+		changed = true;
+	} else if (_.has(req.body,'theme') && _.isString(req.body['theme'])) {
+		const theme = req.body['theme'];
+		if (_.trim(theme).length === 0) {
+			// Default theme
+			req.user.theme = null;
+		} else if (isValidTheme(theme)) {
+			req.user.theme = theme;
+		}
+		changed = true;
 	}
 
-	req.user.name = req.body['name'].trim();
-	req.user.username = req.body['username'].trim();
-	userProvider.updateUser(req.user).then(function() {
+	if (changed) {
+		userProvider.updateUser(req.user).then(function () {
+			req.flash('info', {msg: 'Your profile has been updated!'});
+		}).catch(function (err) {
+			console.error(err);
+			req.flash('error', { msg: 'There was an error updating your profile.' });
+		}).finally(function() {
+			res.redirect('/account/profile');
+		});
+	} else {
 		res.redirect('/account/profile');
-	}).catch(function(err) {
-		res.redirect('/account/profile');
-	});
+	}
 };
 
 /**

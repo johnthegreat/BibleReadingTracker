@@ -126,8 +126,8 @@ UserProvider.prototype.getUserByPasswordResetToken = function(passwordResetToken
  */
 UserProvider.prototype.updateUser = function(user) {
 	return new Promise(function(resolve, reject) {
-		let query = "UPDATE `users` SET `name` = ?, `username` = ?, `password` = ?, `lastLoginDt` = ?, `passwordResetToken` = ?, `passwordResetExpires` = ? WHERE `id` = ?";
-		db.run(query,[user.name,user.username,user.password,user.lastLoginDt,user.passwordResetToken,user.passwordResetExpires,user.id],function(err) {
+		let query = "UPDATE `users` SET `name` = ?, `username` = ?, `password` = ?, `lastLoginDt` = ?, `passwordResetToken` = ?, `passwordResetExpires` = ?, `theme` = ? WHERE `id` = ?";
+		db.run(query,[user.name,user.username,user.password,user.lastLoginDt,user.passwordResetToken,user.passwordResetExpires,user.theme,user.id],function(err) {
 			if (err) {
 				reject(err);
 				return;
