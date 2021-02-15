@@ -60,16 +60,32 @@ exports.postRegister = function(req,res,next) {
 		return res.redirect('/account/register');
 	}
 
-	if (user.name.trim().length === 0) {
+	user.name = user.name.trim();
+	user.username = user.username.trim();
+
+	if (user.name.length === 0) {
 		req.flash('errors',{msg: 'Name is required.' });
 		return res.redirect('/account/register');
-	} else if (user.username.trim().length === 0) {
+	} else if (user.name.length > 100) {
+		req.flash('errors',{msg: 'Name must not exceed 100 characters.' });
+	}
+
+	if (user.username.length === 0) {
 		req.flash('errors',{msg: 'Username is required.' });
 		return res.redirect('/account/register');
-	} if (user.password.trim().length === 0) {
+	} else if (user.username.length > 255) {
+		// 255 is a common default length for VARCHAR columns in (My)SQL databases.
+		// This may cause information leakage regarding our use of a SQL database.
+		req.flash('errors',{msg: 'Username must not exceed 255 characters.'});
+		return res.redirect('/account/register');
+	}
+
+	if (user.password.length === 0) {
 		req.flash('errors',{msg: 'Password is required.' });
 		return res.redirect('/account/register');
-	} else if (user.password.trim().length > MAX_PASSWORD_LENGTH) {
+	} else if (user.password.length > MAX_PASSWORD_LENGTH) {
+		// It's highly unlikely anyone will choose an extremely long password.
+		// This may cause information leakage regarding our use of bcrypt.
 		req.flash('errors',{msg: 'Password must not exceed 70 characters.' });
 		return res.redirect('/account/register');
 	}
@@ -82,16 +98,14 @@ exports.postRegister = function(req,res,next) {
 
 		hashPassword(user.password).then(function (hash) {
 			user.password = hash;
-			let createUserPromise = userProvider.createUser(user);
-			createUserPromise.then(function (user) {
+			userProvider.createUser(user).then(function (user) {
 				req.logIn(user, function(err) {
 					if (err) {
 						return next(err);
 					}
 					res.redirect('/');
 				});
-			});
-			createUserPromise.catch(function (err) {
+			}).catch(function (err) {
 				next(err);
 			});
 		}).catch(function (err) {
@@ -120,8 +134,11 @@ exports.getLogin = function(req,res) {
  * @param {Function} next
  */
 exports.postLogin = function(req,res,next) {
-	if (_.isEmpty(req.body.username)) {
+	if (!_.has(req.body,'username') || _.isEmpty(req.body.username)) {
 		req.flash('errors',{msg: 'Username must not be empty.'});
+		return res.redirect('/account/login');
+	} else if (!_.isString(req.body.username)) {
+		req.flash('errors',{msg: 'Username is not a string.'});
 		return res.redirect('/account/login');
 	} else if (_.isEmpty(req.body.password)) {
 		req.flash('errors',{msg: 'Password must not be empty.' });
@@ -174,8 +191,14 @@ exports.getProfile = function(req,res) {
  * @param {Response} res
  */
 exports.postProfile = function(req,res) {
-	req.user.name = req.body['name'];
-	req.user.username = req.body['username'];
+	if (!_.isString(req.body['name']) && req.body['name'].trim() > 255) {
+		return req.flash('errors',{msg: 'Please enter a valid name.' });
+	} else if (!_.isString(req.body['username']) || req.body['username'].trim().length > 255) {
+		return req.flash('errors',{msg: 'Please enter a valid username.' });
+	}
+
+	req.user.name = req.body['name'].trim();
+	req.user.username = req.body['username'].trim();
 	userProvider.updateUser(req.user).then(function() {
 		res.redirect('/account/profile');
 	}).catch(function(err) {
@@ -199,8 +222,10 @@ exports.logout = function(req,res) {
 
 exports.postPassword = async function(req,res) {
 	let error = null;
-	if (_.isEmpty(req.body['password'])) {
+	if (!_.isString(req.body['password']) || _.isEmpty(req.body['password'])) {
 		error = 'You must provide a password.';
+	} else if (!_.isString(req.body['confirmPassword'])) {
+		error = 'You must enter the password confirmation.';
 	} else if (req.body['password'] !== req.body['confirmPassword']) {
 		error = 'Password and confirm password do not match.';
 	}
@@ -215,8 +240,9 @@ exports.postPassword = async function(req,res) {
 		req.user.password = await hashPassword(req.body['password']);
 		await userProvider.updateUser(req.user);
 		req.flash('info', {msg: 'Your password has been updated!'});
-	} catch (e) {
-		req.flash('error', { msg: e });
+	} catch (err) {
+		console.error(err);
+		req.flash('error', { msg: 'There was an error updating your password.' });
 	}
 	res.redirect('/account/profile');
 };

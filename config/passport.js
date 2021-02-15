@@ -45,7 +45,8 @@ passport.deserializeUser(function(id, done) {
 passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
 	userProvider.getUserByUsername(username).then(function(user) {
 		if (!user) {
-			return done(null, false, { msg: `Username ${username} not found.` });
+			// Error message should be the same (no such user or bad password) to prevent information leakage
+			return done(null, false, { msg: `Invalid username or password.` });
 		}
 
 		bcrypt.compare(password, user.password, function(err, isMatch) {
@@ -53,6 +54,7 @@ passport.use(new LocalStrategy({ usernameField: 'username' }, (username, passwor
 			if (isMatch) {
 				return done(null, user);
 			}
+			// Error message should be the same (no such user or bad password) to prevent information leakage
 			return done(null, false, { msg: 'Invalid username or password.' });
 		});
 	}).catch(function(err) {

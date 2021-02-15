@@ -32,7 +32,8 @@ exports.getUserChaptersRead = async function(req,res) {
 		let userChaptersRead = await userChapterReadProvider.getChaptersReadByUser(req.user['id']);
 		res.status(200).send(userChaptersRead);
 	} catch (err) {
-		res.status(500).send(err);
+		console.error(err);
+		res.status(500).send('Internal Error');
 	}
 }
 
@@ -42,7 +43,10 @@ exports.getUserChaptersRead = async function(req,res) {
  * @param {Response} res
  */
 exports.markAsRead = function(req,res) {
-	if (_.isEmpty(req.query.chapter)) {
+	if (_.isEmpty(req.query['chapter']) || !_.isString(req.query['chapter'])) {
+		res.status(400).send();
+		return;
+	} else if (req.query['chapter'].length > 45) {
 		res.status(400).send();
 		return;
 	}
@@ -54,7 +58,8 @@ exports.markAsRead = function(req,res) {
 	userChapterReadProvider.createOrUpdateChapterRead(userChapterRead).then(function(_userChapterRead) {
 		res.status(200).send(_userChapterRead);
 	}).catch(function(err) {
-		res.status(500).send(err);
+		console.error(err);
+		res.status(500).send('Internal Error');
 	});
 };
 
@@ -64,7 +69,10 @@ exports.markAsRead = function(req,res) {
  * @param {Response} res
  */
 exports.markAsUnread = async function(req,res) {
-	if (_.isEmpty(req.query.chapter)) {
+	if (_.isEmpty(req.query['chapter']) || !_.isString(req.query['chapter'])) {
+		res.status(400).send();
+		return;
+	} else if (req.query['chapter'].length > 45) {
 		res.status(400).send();
 		return;
 	}
@@ -74,10 +82,13 @@ exports.markAsUnread = async function(req,res) {
 		let userChapterRead = await userChapterReadProvider.getUserChapterReadByUniqueKey(req.user.id, chapter);
 		if (userChapterRead !== null) {
 			await userChapterReadProvider.deleteUserChapterRead(userChapterRead.id);
+			res.status(204).send();
+		} else {
+			res.status(404).send();
 		}
-		res.status(204).send();
-	} catch (e) {
-		res.status(500).send(e);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send('Internal Error');
 	}
 };
 

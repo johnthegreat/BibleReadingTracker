@@ -45,8 +45,9 @@ exports.deleteAccount = async function(req,res) {
 			req.user = null;
 			res.status(204).send();
 		});
-	} catch (e) {
-		res.status(500).send(e);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send('Internal Error');
 	}
 };
 

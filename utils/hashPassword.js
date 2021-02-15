@@ -18,9 +18,11 @@
 
 const bcrypt = require('bcrypt');
 
+const numRounds = process.env.BCRYPT_ROUNDS || 10;
+
 const hashPassword = function(password) {
 	return new Promise(function(resolve, reject) {
-		bcrypt.genSalt(10, (err, salt) => {
+		bcrypt.genSalt(numRounds, (err, salt) => {
 			if (err) {
 				reject(err);
 				return;
