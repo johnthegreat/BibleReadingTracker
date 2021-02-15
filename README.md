@@ -7,7 +7,7 @@ This platform supports multiple users out of the box.
 ## Quick Start
 
 1. Clone or download project
-2. Configure settings in the `.env` file to your requirements.
+2. Copy `.env.example` to `.env` and configure the settings to meet your requirements.
 3. Run `npm install`
 4. Run `node bin/www`. For more debugging information, try `DEBUG=* node bin/www`.
 
