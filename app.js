@@ -130,7 +130,7 @@ app.get('/css/*', cacheControlMiddleware);
 app.get('/api/books',cacheControlMiddleware);
 
 app.use(function setThemeUrl(req,res,next) {
-	// Themes only applies to views
+	// Themes only apply to views
 	if (req.path.startsWith('/api')) {
 		next();
 		return;

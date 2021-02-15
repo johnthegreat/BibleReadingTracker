@@ -8,8 +8,9 @@ This platform supports multiple users out of the box.
 
 1. Clone or download project
 2. Copy `.env.example` to `.env` and configure the settings to meet your requirements.
-3. Run `npm install`
-4. Run `node bin/www`. For more debugging information, try `DEBUG=* node bin/www`.
+3. Import the database structure to your database. See `Fresh Database Install.sql`.
+4. Run `npm install`
+5. Run `node bin/www`. For more debugging information, try `DEBUG=* node bin/www`.
 
 ## Technology Stack
 
