@@ -39,4 +39,20 @@ create unique index users_passwordResetToken_uindex
 create unique index users_username_uindex
     on users (username);
 
+create table user_authtoken
+(
+    id        INTEGER,
+    userId    int      not null,
+    authToken char(40) not null,
+    createdAt timestamp default CURRENT_TIMESTAMP not null,
+    expires   datetime,
+    primary key (id autoincrement),
+    constraint user_authtoken_authToken_uindex
+        unique (authToken)
+);
+
+create index userId_idx
+    on user_authtoken (userId);
+
+
 

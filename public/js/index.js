@@ -21,7 +21,10 @@ let markChapterAsRead = function(chapter) {
 	return new Promise(function(resolve, reject) {
 		$.ajax({
 			method: 'put',
-			url: '/api/chapter_read?chapter='+encodeURIComponent(chapter),
+			url: '/api/chapter_read',
+			data: {
+				chapter: chapter
+			},
 			success: resolve,
 			error: reject
 		});
@@ -33,7 +36,10 @@ let markChapterAsUnread = function(chapter) {
 	return new Promise(function(resolve, reject) {
 		$.ajax({
 			method: 'delete',
-			url: '/api/chapter_read?chapter='+encodeURIComponent(chapter),
+			url: '/api/chapter_read',
+			data: {
+				chapter: chapter
+			},
 			success: resolve,
 			error: reject
 		});

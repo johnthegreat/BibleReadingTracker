@@ -13,15 +13,27 @@
 <script src="/js/BookComponentPanel.js"></script>
 <script>
 	$(function() {
-		let $booksContainer = $('#booksContainer');
-		getBooks().then(function(books) {
+		const $booksContainer = $('#booksContainer');
+
+		const onReceivedBooks = function(books) {
 			getChaptersRead().then(function(myChaptersRead) {
 				_.each(books,function(book) {
 					let bookPanel = new BookComponentPanel({book: book.book, chapters: book.chapters, myChaptersRead: myChaptersRead });
 					$booksContainer.append(bookPanel.element);
 				});
 			});
-		});
+		};
+
+		// The Bible won't change, we can cache the books in localStorage.
+		const booksFromLocalStorage = window.localStorage.getItem('books');
+		if (booksFromLocalStorage === null) {
+			getBooks().then(function (books) {
+				window.localStorage.setItem('books',JSON.stringify(books));
+				onReceivedBooks(books);
+			});
+		} else {
+			onReceivedBooks(JSON.parse(booksFromLocalStorage));
+		}
 	});
 </script>
 
@@ -46,7 +58,13 @@
 		<div class="panel-heading" role="tab" id="heading\{{uniq}}">
 			<h4 class="panel-title">
 				<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse\{{uniq}}" aria-expanded="false" aria-controls="collapse\{{uniq}}">
-					<div class="book-name">\{{book}}</div>
+					<div class="book-name">
+						\{{book}}
+
+						<span class="pull-right">
+							<i data-role="icon" class="fas fa-chevron-down"></i>
+						</span>
+					</div>
 				</a>
 			</h4>
 		</div>

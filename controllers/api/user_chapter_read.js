@@ -22,6 +22,8 @@ const moment = require('moment');
 const UserChapterRead = require('../../models/UserChapterRead');
 const userChapterReadProvider = require('../lib/UserChapterReadProvider');
 
+const apiFieldsToOmit = ['userId'];
+
 /**
  *
  * @param {Request} req
@@ -29,7 +31,10 @@ const userChapterReadProvider = require('../lib/UserChapterReadProvider');
  */
 exports.getUserChaptersRead = async function(req,res) {
 	try {
-		let userChaptersRead = await userChapterReadProvider.getChaptersReadByUser(req.user['id']);
+		let userChaptersRead = await userChapterReadProvider.getChaptersReadByUser(req.user.id);
+		userChaptersRead = _.map(userChaptersRead,function(userChapterRead) {
+			return _.omit(userChapterRead,apiFieldsToOmit);
+		})
 		res.status(200).send(userChaptersRead);
 	} catch (err) {
 		console.error(err);
@@ -43,19 +48,26 @@ exports.getUserChaptersRead = async function(req,res) {
  * @param {Response} res
  */
 exports.markAsRead = function(req,res) {
-	if (_.isEmpty(req.query['chapter']) || !_.isString(req.query['chapter'])) {
+	if (!_.has(req.body,'chapter')) {
 		res.status(400).send();
 		return;
-	} else if (req.query['chapter'].length > 45) {
+	} else if (!_.isString(req.body['chapter'])) {
+		res.status(400).send();
+		return;
+	}
+
+	const chapter = _.trim(req.body['chapter']);
+	if (chapter.length === 0 || chapter.length > 45) {
 		res.status(400).send();
 		return;
 	}
 
 	let userChapterRead = new UserChapterRead();
 	userChapterRead.userId = req.user.id;
-	userChapterRead.chapter = req.query['chapter'];
+	userChapterRead.chapter = chapter;
 	userChapterRead.lastReadDate = moment.utc().format('YYYY-MM-DD');
 	userChapterReadProvider.createOrUpdateChapterRead(userChapterRead).then(function(_userChapterRead) {
+		_userChapterRead = _.omit(_userChapterRead,apiFieldsToOmit);
 		res.status(200).send(_userChapterRead);
 	}).catch(function(err) {
 		console.error(err);
@@ -69,15 +81,20 @@ exports.markAsRead = function(req,res) {
  * @param {Response} res
  */
 exports.markAsUnread = async function(req,res) {
-	if (_.isEmpty(req.query['chapter']) || !_.isString(req.query['chapter'])) {
+	if (!_.has(req.body,'chapter')) {
 		res.status(400).send();
 		return;
-	} else if (req.query['chapter'].length > 45) {
+	} else if (!_.isString(req.body['chapter'])) {
 		res.status(400).send();
 		return;
 	}
 
-	let chapter = req.query['chapter'];
+	const chapter = _.trim(req.body['chapter']);
+	if (chapter.length === 0 || chapter.length > 45) {
+		res.status(400).send();
+		return;
+	}
+
 	try {
 		let userChapterRead = await userChapterReadProvider.getUserChapterReadByUniqueKey(req.user.id, chapter);
 		if (userChapterRead !== null) {

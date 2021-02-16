@@ -62,5 +62,15 @@ function BookComponentPanel(opts) {
 		}
 	});
 
+	this.element.on('show.bs.collapse',function(e) {
+		const $iconEl = this.element.find('i[data-role="icon"]');
+		$iconEl.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+	}.bind(this));
+
+	this.element.on('hide.bs.collapse',function() {
+		const $iconEl = this.element.find('i[data-role="icon"]');
+		$iconEl.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+	}.bind(this));
+
 	return this;
 }

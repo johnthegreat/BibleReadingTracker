@@ -31,6 +31,9 @@ const UserProvider = require('./lib/UserProvider');
  */
 const userProvider = new UserProvider();
 
+const UserAuthToken = require('../models/UserAuthToken');
+const userAuthTokenProvider = require('./lib/UserAuthTokenProvider');
+
 const MAX_PASSWORD_LENGTH = 70;
 
 /**
@@ -40,7 +43,7 @@ const MAX_PASSWORD_LENGTH = 70;
  */
 exports.getRegister = function(req,res) {
 	res.render('account/register', {
-		title: 'Register'
+		title: 'Bible Reading Tracker - Register'
 	});
 };
 
@@ -124,7 +127,7 @@ exports.postRegister = function(req,res,next) {
  */
 exports.getLogin = function(req,res) {
 	res.render('account/login', {
-		title: 'Login'
+		title: 'Bible Reading Tracker - Login'
 	});
 };
 
@@ -180,9 +183,11 @@ exports.postLogin = function(req,res,next) {
  * @param {Request} req
  * @param {Response} res
  */
-exports.getProfile = function(req,res) {
+exports.getProfile = async function(req,res) {
+	const userAuthTokens = await userAuthTokenProvider.getUserAuthTokensByUserId(req.user.id);
 	res.render('account/profile',{
-		title: 'Profile'
+		title: 'Bible Reading Tracker - Profile',
+		userAuthTokens: userAuthTokens
 	});
 };
 

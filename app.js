@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Module dependencies
 const createError = require('http-errors');
 const express = require('express');
 const session = require('express-session');
@@ -29,9 +30,13 @@ const passport = require('passport');
 const sqlite3 = require('sqlite3');
 const flash = require('express-flash');
 const lusca = require('lusca');
+const rfs = require('rotating-file-stream');
+const moment = require('moment');
 
 const sqliteStoreFactory = require('express-session-sqlite').default;
 const SqliteStore = new sqliteStoreFactory(session);
+
+const userAuthTokenProvider = require('./controllers/lib/UserAuthTokenProvider');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -39,7 +44,17 @@ const SqliteStore = new sqliteStoreFactory(session);
 dotenv.config({ path: '.env' });
 
 // Helpers
+const isProduction = require('./utils/isProduction');
 const getThemeUrl = require('./utils/getThemeUrl');
+
+const UserProvider = require('./controllers/lib/UserProvider');
+
+/**
+ *
+ * @type {UserProvider}
+ */
+const userProvider = new UserProvider();
+
 const hbs = require('hbs');
 hbs.registerPartials(__dirname + '/views/partials');
 // https://github.com/pillarjs/hbs
@@ -60,7 +75,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.disable('x-powered-by');
+// Setup logging if production environment
+if (isProduction()) {
+	// https://www.npmjs.com/package/rotating-file-stream
+	const accessLogStream = rfs.createStream('access.log',{
+		size: '4M',
+		path: process.env.LOGS_DIR,
+		maxFiles: 30
+	});
+	app.use(logger('combined',{
+		stream: accessLogStream
+	}));
+}
 
 const sqliteStoreOptions = {
 	// Database library to use. Any library is fine as long as the API is compatible
@@ -76,7 +102,10 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	secret: process.env.SESSION_SECRET,
-	cookie: { maxAge: 604800000 } // one week
+	cookie: {
+		maxAge: 86400000, // one week
+		sameSite: 'strict'
+	}
 }));
 
 app.use(flash());
@@ -100,6 +129,49 @@ const passportConfig = require('./config/passport');
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/api',async function _checkAuthToken(req,res,next) {
+	const sendUnauthorized = function() {
+		res.status(401).send('Unauthorized');
+	};
+
+	if (req.isAuthenticated()) {
+		next();
+	} else if (!req.user) {
+		const authToken = (function() {
+			if (req.query && _.has(req.query,'authToken') && _.isString(req.query['authToken']) && _.trim(req.query['authToken']).length > 0) {
+				return _.trim(req.query['authToken']);
+			}
+			return null;
+		})();
+
+		if (authToken === null) {
+			sendUnauthorized();
+			return;
+		}
+
+		const userAuthToken = await userAuthTokenProvider.getUserAuthTokenByKey(authToken);
+		if (userAuthToken === null) {
+			sendUnauthorized();
+			return;
+		}
+
+		const isNotExpired = moment.utc() < moment.utc(userAuthToken.expires, "YYYY-MM-DD HH:mm:ss");
+		if (isNotExpired) {
+			const user = await userProvider.getUserById(userAuthToken.userId);
+			if (user !== null) {
+				req.user = user;
+				next();
+			} else {
+				sendUnauthorized();
+			}
+		} else {
+			sendUnauthorized();
+		}
+	} else {
+		sendUnauthorized();
+	}
+});
 
 app.use((req, res, next) => {
 	res.locals.user = req.user;
@@ -128,6 +200,13 @@ const cacheControlMiddleware = function (req, res, next) {
 app.get('/js/*', cacheControlMiddleware);
 app.get('/css/*', cacheControlMiddleware);
 app.get('/api/books',cacheControlMiddleware);
+
+const apiIsAuthenticated = function (req, res, next) {
+	if (req.user || req.isAuthenticated()) {
+		return next();
+	}
+	res.status(401).send();
+};
 
 app.use(function setThemeUrl(req,res,next) {
 	// Themes only apply to views
@@ -183,12 +262,17 @@ app.get('/account/logout',passportConfig.isAuthenticated,accountController.logou
 	app.get('/api/books',booksApiController.getBooks);
 
 	const userChapterReadApiController = require('./controllers/api/user_chapter_read');
-	app.get('/api/chapter_read',passportConfig.isAuthenticated,userChapterReadApiController.getUserChaptersRead);
-	app.put('/api/chapter_read',passportConfig.isAuthenticated,userChapterReadApiController.markAsRead);
-	app.delete('/api/chapter_read',passportConfig.isAuthenticated,userChapterReadApiController.markAsUnread);
+	app.get('/api/chapter_read',apiIsAuthenticated,userChapterReadApiController.getUserChaptersRead);
+	app.put('/api/chapter_read',apiIsAuthenticated,userChapterReadApiController.markAsRead);
+	app.delete('/api/chapter_read',apiIsAuthenticated,userChapterReadApiController.markAsUnread);
 
 	const accountApiController = require('./controllers/api/account');
-	app.delete('/api/account',passportConfig.isAuthenticated,accountApiController.deleteAccount);
+	app.delete('/api/account',apiIsAuthenticated,accountApiController.deleteAccount);
+
+	const apiUserAuthTokenController = require('./controllers/api/userAuthToken');
+	app.get('/api/userAuthToken',apiIsAuthenticated,apiUserAuthTokenController.index);
+	app.post('/api/userAuthToken',apiIsAuthenticated,apiUserAuthTokenController.create);
+	app.delete('/api/userAuthToken/:userAuthTokenId',apiIsAuthenticated,apiUserAuthTokenController.delete);
 })();
 
 // catch 404 and forward to error handler

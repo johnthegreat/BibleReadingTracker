@@ -16,6 +16,49 @@
 				confirmDeleteModal.show();
 			});
 		});
+
+		const createUserAuthToken = function() {
+			return new Promise(function(resolve, reject) {
+				$.ajax({
+					method: 'post',
+					url: '/api/userAuthToken',
+					success: resolve,
+					error: reject
+				});
+			});
+		};
+		$('#createAuthTokenBtn').on('click',function(e) {
+			createUserAuthToken().finally(function(userAuthToken) {
+				window.location.reload();
+			});
+		});
+
+		const deleteUserAuthToken = function(userAuthTokenId) {
+			return new Promise(function(resolve, reject) {
+				$.ajax({
+					method: 'delete',
+					url: '/api/userAuthToken/'+userAuthTokenId,
+					success: resolve,
+					error: reject
+				});
+			});
+		};
+
+		$(document).on("click","tr[data-id] [data-role='deleteAuthTokenBtn']",function(e) {
+			const userAuthTokenId = $(e.target).closest("[data-id]").attr("data-id");
+			const modal = new ConfirmActionModal({
+				title: 'Delete Confirmation',
+				message: 'Delete this Auth Token?',
+				saveCallback: function() {
+					deleteUserAuthToken(userAuthTokenId).finally(function() {
+						window.location.reload();
+					});
+				}
+			});
+			modal.load().then(function() {
+				modal.show();
+			});
+		});
 	});
 </script>
 
@@ -134,6 +177,40 @@
 					</div>
 				</div>
 			</form>
+		</div>
+	</div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<i class="fas fa-key"></i> Auth Tokens (Api Keys)
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped">
+					<thead>
+					<tr>
+						<th>Auth Token</th>
+						<th>Generated Date</th>
+						<th>Expiration Date</th>
+						<th>Actions</th>
+					</tr>
+					</thead>
+					<tbody>
+					{{#if userAuthTokens}}
+						{{#each userAuthTokens as |userAuthToken|}}
+							<tr data-id="{{userAuthToken.id}}">
+								<td>{{userAuthToken.authToken}}</td>
+								<td>{{userAuthToken.createdAt}}</td>
+								<td>{{userAuthToken.expires}}</td>
+								<td><button class="btn btn-sm btn-danger" title="Delete Auth Token" data-role="deleteAuthTokenBtn"><i class="fas fa-trash"></i></button></td>
+							</tr>
+						{{/each}}
+					{{/if}}
+					</tbody>
+				</table>
+			</div>
+
+			<button class="btn btn-primary" id="createAuthTokenBtn"{{#gt userAuthTokens.length 0}} disabled{{/gt}}><i class="fas fa-plus"></i> Create Auth Token</button>
 		</div>
 	</div>
 
