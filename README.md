@@ -14,7 +14,7 @@ This platform supports multiple users out of the box.
 
 ## Technology Stack
 
-jQuery, Bootstrap 3, Lodash, Handlebars, Node.JS, Express, SQLite, others.
+jQuery, Bootstrap 4, Lodash, Handlebars, Node.JS, Express, SQLite, others.
 
 The application's backend was heavily inspired by https://github.com/sahat/hackathon-starter.
 
