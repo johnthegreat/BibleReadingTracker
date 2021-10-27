@@ -1,86 +1,86 @@
 [
   {
     "name": "Cerulean",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/cerulean/bootstrap.min.css"
   },
   {
     "name": "Cosmo",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cosmo/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/cosmo/bootstrap.min.css"
   },
   {
     "name": "Cyborg",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cyborg/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/cyborg/bootstrap.min.css"
   },
   {
     "name": "Darkly",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/darkly/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/darkly/bootstrap.min.css"
   },
   {
     "name": "Flatly",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/flatly/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/flatly/bootstrap.min.css"
   },
   {
     "name": "Journal",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/journal/bootstrap.min.css"
   },
   {
     "name": "Litera",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/litera/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/litera/bootstrap.min.css"
   },
   {
     "name": "Lumen",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/lumen/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/lumen/bootstrap.min.css"
   },
   {
     "name": "Lux",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/lux/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/lux/bootstrap.min.css"
   },
   {
     "name": "Materia",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/materia/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/materia/bootstrap.min.css"
   },
   {
     "name": "Minty",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/minty/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/minty/bootstrap.min.css"
   },
   {
     "name": "Pulse",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/pulse/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/pulse/bootstrap.min.css"
   },
   {
     "name": "Sandstone",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sandstone/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/sandstone/bootstrap.min.css"
   },
   {
     "name": "Simplex",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/simplex/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/simplex/bootstrap.min.css"
   },
   {
     "name": "Sketchy",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sketchy/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/sketchy/bootstrap.min.css"
   },
   {
     "name": "Slate",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/slate/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/slate/bootstrap.min.css"
   },
   {
     "name": "Solar",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/solar/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/solar/bootstrap.min.css"
   },
   {
     "name": "Spacelab",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/spacelab/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/spacelab/bootstrap.min.css"
   },
   {
     "name": "Superhero",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/superhero/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/superhero/bootstrap.min.css"
   },
   {
     "name": "United",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/united/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/united/bootstrap.min.css"
   },
   {
     "name": "Yeti",
-    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/yeti/bootstrap.min.css"
+    "url": "https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/yeti/bootstrap.min.css"
   }
 ]
