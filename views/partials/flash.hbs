@@ -1,7 +1,7 @@
 {{#if messages.errors}}
-<div class="alert alert-danger show">
-	<button class="close" type="button" data-dismiss="alert">
-		×
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
 	</button>
 	{{#each messages.errors as |error|}}
 		<div>{{error.msg}}</div>
@@ -10,9 +10,9 @@
 {{/if}}
 
 {{#if messages.info}}
-<div class="alert alert-info show">
-	<button class="close" type="button" data-dismiss="alert">
-		×
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
 	</button>
 	{{#each messages.info as |info|}}
 		<div>{{info.msg}}</div>
@@ -21,9 +21,9 @@
 {{/if}}
 
 {{#if messages.success}}
-<div class="alert alert-success show">
-	<button class="close" type="button" data-dismiss="alert">
-		×
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
 	</button>
 	{{#each messages.success as |success|}}
 		<div>{{success.msg}}</div>

@@ -18,8 +18,7 @@
 
 const _ = require('lodash');
 
-// https://bootswatch.com/3/
-// https://www.bootstrapcdn.com/legacy/bootswatch/
+// https://bootswatch.com/4/
 const themes = require('../data/themes.json');
 
 /**

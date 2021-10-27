@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>{{title}}</title>
 
 	<link rel="shortcut icon" href="/favicon.png">
@@ -16,12 +15,12 @@
 
 	{{! Theme CDN }}
 	{{#if themeUrl}}
-	<link rel="dns-prefetch" href="https://stackpath.bootstrapcdn.com">
-	<link rel="preconnect" href="https://stackpath.bootstrapcdn.com">
+	<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+	<link rel="preconnect" href="https://cdn.jsdelivr.net">
 	{{/if}}
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js" integrity="sha512-XKa9Hemdy1Ui3KSGgJdgMyYlUg1gM+QhL6cnlyTe2qzMCYm4nAZ1PsVerQzTTXzonUR+dmswHqgJPuwCq1MaAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js" integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg==" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js" integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww==" crossorigin="anonymous"></script>
@@ -29,7 +28,7 @@
 	<script src="/js/all.js"></script>
 	<script src="/js/modals/ConfirmActionModal.js"></script>
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha512-Dop/vW3iOtayerlYAqCgkVr2aTr2ErwwTYOvRFUpzl2VhCMJyjQF0Q9TjUXIo6JhuM/3i0vVEt2e/7QQmnHQqw==" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" integrity="sha512-P5MgMn1jBN01asBgU0z60Qk4QxiXo86+wlFahKrsQf37c9cro517WzVSPPV1tDKzhku2iJ2FVgL67wG03SGnNA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	{{#if themeUrl}}<link rel="stylesheet" href="{{themeUrl}}">{{/if}}
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/fontawesome.min.css" integrity="sha512-shT5e46zNSD6lt4dlJHb+7LoUko9QZXTGlmWWx0qjI9UhQrElRb+Q5DM7SVte9G9ZNmovz2qIaV7IWv0xQkBkw==" crossorigin="anonymous" />
@@ -49,50 +48,47 @@
 	</style>
 </head>
 <body>
-	<nav class="navbar navbar-default">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="/">Bible Reading Tracker</a>
-			</div>
+	<div class="container">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="/">Bible Reading Tracker</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<!--<ul class="nav navbar-nav">
 					<li><a href="/about">About</a></li>
 				</ul>-->
 
-				<ul class="nav navbar-nav navbar-right">
+				<ul class="navbar-nav ml-auto">
 					{{#if user}}
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name}} <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="/account/profile"><i class="fas fa-user-circle"></i> Profile</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="/account/logout"><i class="fas fa-lock"></i> Log Out</a></li>
-							</ul>
+						<li class="nav-item dropdown">
+							<a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name}} <span class="caret"></span></a>
+							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+								<a class="dropdown-item" href="/account/profile"><i class="fas fa-user-circle"></i> Profile</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="/account/logout"><i class="fas fa-lock"></i> Log Out</a>
+							</div>
 						</li>
 					{{/if}}
 					{{#unless user}}
-						<li><a href="/account/register">Register</a></li>
-						<li><a href="/account/login">Login</a></li>
+						<li class="nav-item"><a class="nav-link" href="/account/register">Register</a></li>
+						<li class="nav-item"><a class="nav-link" href="/account/login">Login</a></li>
 					{{/unless}}
 				</ul>
 			</div>
-		</div>
-	</nav>
+		</nav>
+	</div>
 
-	<div class="container">
+	<div class="container mt-3">
 		{{> flash }}
 
 		{{{body}}}
+
 		<div class="clearfix"></div>
+
 		<footer id="app-footer">
-			<div class="pull-right">
+			<div class="float-right">
 				Copyright &copy; 2020 John Nahlen. <a href="https://www.gnu.org/licenses/agpl-3.0.txt">License</a>
 			</div>
 		</footer>

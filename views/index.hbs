@@ -1,11 +1,6 @@
 <style>
 	label {
 		user-select: none;
-		font-size: 18px;
-	}
-
-	.book-name {
-		font-size: 24px;
 	}
 </style>
 
@@ -39,36 +34,36 @@
 
 <div id="booksContainer"></div>
 
-<div id="bookComponentChapterTemplate" class="hide">
+<div id="bookComponentChapterTemplate" class="d-none">
 	<div class="list-group-item">
 		<div class="checkbox">
-			<label>
+			<label class="m-0">
 				\{{#if checked}}<input type="checkbox" checked="checked">\{{/if}} \{{#unless checked}}<input type="checkbox">\{{/unless}} \{{chapterName}}
 			</label>
 
-			<div class="pull-right">
+			<div class="float-right">
 				<div class="last-read">\{{lastRead}}</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div id="bookComponentTemplate" class="hide">
-	<div class="panel panel-primary">
-		<div class="panel-heading" role="tab" id="heading\{{uniq}}">
-			<h4 class="panel-title">
-				<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse\{{uniq}}" aria-expanded="false" aria-controls="collapse\{{uniq}}">
+<div id="bookComponentTemplate" class="d-none">
+	<div class="card my-3">
+		<div class="card-header" role="tab" id="heading\{{uniq}}">
+			<h4 class="card-title m-0">
+				<a class="collapsed" role="button" data-toggle="collapse" data-target="#collapse\{{uniq}}" href="#collapse\{{uniq}}" aria-expanded="false" aria-controls="collapse\{{uniq}}">
 					<div class="book-name">
 						\{{book}}
 
-						<span class="pull-right">
+						<span class="float-right">
 							<i data-role="icon" class="fas fa-chevron-down"></i>
 						</span>
 					</div>
 				</a>
 			</h4>
 		</div>
-		<div id="collapse\{{uniq}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading\{{uniq}}">
+		<div id="collapse\{{uniq}}" class="collapse" role="tabpanel" aria-labelledby="heading\{{uniq}}">
 			<div class="list-group"></div>
 		</div>
 	</div>
