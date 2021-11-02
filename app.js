@@ -173,6 +173,40 @@ app.use('/api',async function _checkAuthToken(req,res,next) {
 	}
 });
 
+app.use('/', async function _checkAuthToken(req,res,next) {
+	if (req.path.indexOf('/api') === 0) {
+		return next();
+	}
+
+	if (!req.query || !_.has(req.query, 'authToken') || !_.isString(req.query['authToken'])) {
+		return next();
+	}
+
+	const authToken = _.trim(req.query['authToken']);
+
+	const userAuthToken = await userAuthTokenProvider.getUserAuthTokenByKey(authToken);
+	if (userAuthToken === null) {
+		return next();
+	}
+
+	if (moment.utc() >= moment.utc(userAuthToken.expires,"YYYY-MM-DD HH:mm:ss")) {
+		return next();
+	}
+
+	const user = await userProvider.getUserById(userAuthToken.userId);
+	req.logIn(user, function(err) {
+		if (err) {
+			return next(err);
+		}
+
+		user.lastLoginDt = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+		userProvider.updateUser(user).finally(function() {
+			req.flash('success', {msg: 'Success! You are logged in.'});
+			res.redirect('/');
+		});
+	});
+});
+
 app.use((req, res, next) => {
 	res.locals.user = req.user;
 	next();
@@ -236,6 +270,7 @@ const aboutController = require('./controllers/about');
 app.get('/about',aboutController.getAbout);
 
 const accountController = require('./controllers/account');
+
 //
 // Public Routes
 //
@@ -253,6 +288,7 @@ app.get('/account/profile',passportConfig.isAuthenticated,accountController.getP
 app.post('/account/profile',passportConfig.isAuthenticated,accountController.postProfile);
 app.post('/account/password',passportConfig.isAuthenticated,accountController.postPassword);
 app.get('/account/logout',passportConfig.isAuthenticated,accountController.logout);
+app.get('/account/view-qr/:authTokenId',passportConfig.isAuthenticated,accountController.viewQrCode);
 
 //
 // Api Routes
@@ -273,6 +309,8 @@ app.get('/account/logout',passportConfig.isAuthenticated,accountController.logou
 	app.get('/api/userAuthToken',apiIsAuthenticated,apiUserAuthTokenController.index);
 	app.post('/api/userAuthToken',apiIsAuthenticated,apiUserAuthTokenController.create);
 	app.delete('/api/userAuthToken/:userAuthTokenId',apiIsAuthenticated,apiUserAuthTokenController.delete);
+
+	app.get('/api/userAuthToken/:userAuthTokenId/qr',apiIsAuthenticated,apiUserAuthTokenController.generateQrCode);
 })();
 
 // catch 404 and forward to error handler

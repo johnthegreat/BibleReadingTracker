@@ -28,6 +28,8 @@ const sha1 = function(data) {
 	return crypto.createHash("sha1").update(data).digest("hex");
 }
 
+const generateQrCodeIntoStream = require('../../utils/generateQrCodeIntoStream');
+
 const MAX_ALLOWED_USER_AUTH_TOKENS = 1;
 
 /**
@@ -129,3 +131,20 @@ exports.delete = async function(req,res) {
 		res.status(500).send('Internal Error');
 	}
 };
+
+exports.generateQrCode = async function(req,res) {
+	const authTokenId = req.params.userAuthTokenId;
+	if (_.isEmpty(authTokenId)) {
+		return res.status(400).send();
+	}
+	const authToken = await userAuthTokenProvider.getUserAuthTokenById(authTokenId);
+	if (authToken === null || authToken.userId !== req.user.id) {
+		return res.status(404).send();
+	}
+	const qrStream = await generateQrCodeIntoStream(process.env.BASE_URL + '/?authToken='+authToken.authToken);
+	res.set('Content-Disposition', 'inline');
+	res.set('Content-Type', 'image/png');
+	qrStream.pipe(res);
+}
+
+module.exports = exports;

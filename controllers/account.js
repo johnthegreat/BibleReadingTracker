@@ -302,4 +302,27 @@ exports.postForgot = function(req,res) {
 	// We would need to collect the user's e-mail address at registration for this to work.
 };
 
+// GET /account/view-qr/:authTokenId
+exports.viewQrCode = async function(req,res) {
+	const authTokenId = req.params.authTokenId;
+	if (_.isEmpty(authTokenId)) {
+		return res.status(400).send();
+	}
+	const authToken = await userAuthTokenProvider.getUserAuthTokenById(authTokenId);
+	if (authToken === null) {
+		return res.status(404).send();
+	}
+	if (authToken.userId !== req.user.id) {
+		// 404 because, even though the object exists, it belongs to another user so we should tell them it doesn't exist to not give away that it's another user's.
+		return res.status(404).send();
+	}
+	const url = process.env.BASE_URL + '/?authToken='+authToken.authToken;
+
+	res.render('account/view-qr',{
+		authToken: authToken,
+		url: url
+	});
+}
+
+
 module.exports = exports;

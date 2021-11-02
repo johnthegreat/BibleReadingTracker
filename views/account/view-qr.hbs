@@ -1,0 +1,21 @@
+<h1 class="d-none d-print-block">Bible Reading Tracker</h1>
+
+
+<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Warning! Scanning this QR code will log you in automatically for your convenience. Keep it safe and secure.</div>
+
+<div class="text-center">
+	<div>
+		<img src="/api/userAuthToken/{{authToken.id}}/qr" alt="">
+	</div>
+
+	<p>
+		<a href="{{url}}" class="d-none d-sm-block">{{url}}</a>
+	</p>
+
+
+	<div>
+		<button class="btn btn-success d-print-none" onclick="window.print();">
+			<i class="fas fa-print"></i> Print
+		</button>
+	</div>
+</div>
