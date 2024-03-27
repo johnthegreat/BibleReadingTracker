@@ -58,12 +58,22 @@ const userProvider = new UserProvider();
 const hbs = require('hbs');
 hbs.registerPartials(__dirname + '/views/partials');
 // https://github.com/pillarjs/hbs
-require('handlebars-helpers')({
-	handlebars: hbs.handlebars
+
+hbs.handlebars.registerHelper("eq", function(a, b, options) {
+	if (a === b) {
+		return options.fn(this);
+	} else {
+		return options.inverse(this);
+	}
+});
+hbs.handlebars.registerHelper("gt", function(a, b, options) {
+	return a > b ? options.fn(this) : options.inverse(this);
 });
 
 const app = express();
-app.use(helmet());
+app.use(helmet({
+	contentSecurityPolicy: false
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

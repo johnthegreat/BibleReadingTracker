@@ -37,8 +37,7 @@ exports.deleteAccount = async function(req,res) {
 		await userChapterReadProvider.deleteUserChaptersReadByUserId(req.user.id);
 		await userProvider.deleteUser(req.user.id);
 
-		req.logout();
-		req.session.destroy(function(err) {
+		req.logOut(function(err) {
 			if (err) {
 				console.log('Error : Failed to destroy the session during logout.', err);
 			}
